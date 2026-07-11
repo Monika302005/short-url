@@ -1,12 +1,12 @@
 const jwt = require("jsonwebtoken");
-const secret = "Monika@3008051001";
+const secret = process.env.JWT_SECRET || "Monika@3008051001";
 
 function setUser(user) {
     return jwt.sign(
         {
             _id: user._id,
             email: user.email,
-            role: user.role,
+            role: user.role || "NORMAL",
         },
         secret
     );
@@ -14,12 +14,11 @@ function setUser(user) {
 
 function getUser(token) {
     if (!token) return null;
-    try{
-    return jwt.verify(token, secret);
-}
-catch(error){
-    return null;
-}
+    try {
+        return jwt.verify(token, secret);
+    } catch (error) {
+        return null;
+    }
 }
 
 module.exports = {

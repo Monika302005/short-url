@@ -23,8 +23,9 @@ function restrictTo(roles = []) {
             return res.redirect("/login");
         }
 
-        if (!roles.includes(req.user.role)) {
-            return res.end("UnAuthorized");
+        const userRole = req.user.role || "NORMAL";
+        if (!roles.includes(userRole)) {
+            return res.status(403).end("UnAuthorized");
         }
 
         return next();

@@ -1,61 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        body{
-            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Home - URL Shortener</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
+            --card-bg: rgba(30, 41, 59, 0.4);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --success-border: rgba(16, 185, 129, 0.3);
+            --success-text: #34d399;
+            --error-bg: rgba(239, 68, 68, 0.15);
+            --error-border: rgba(239, 68, 68, 0.4);
+            --error-text: #fca5a5;
+        }
+
+        body {
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            background: var(--bg-gradient);
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0;
+            background: linear-gradient(135deg, #a5b4fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-group input {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            font-size: 1rem;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .form-group button {
+            background: var(--accent-color);
+            border: none;
+            border-radius: 8px;
+            padding: 0.85rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .form-group button:hover {
+            background: var(--accent-hover);
+        }
+
+        .error-message {
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            color: var(--error-text);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            font-size: 0.875rem;
+        }
+
+        .success-banner {
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .success-title {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--success-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .url-copy-box {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .url-copy-box input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .url-copy-box button {
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .url-copy-box button:hover {
+            background: var(--accent-hover);
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        a.short-link {
+            color: #818cf8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        a.short-link:hover {
+            color: #a5b4fc;
+            text-decoration: underline;
+        }
+
+        a.dest-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a.dest-link:hover {
+            color: var(--text-primary);
+            text-decoration: underline;
+        }
+
+        .clicks-badge {
+            background: rgba(99, 102, 241, 0.15);
+            color: #a5b4fc;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-    <h1>URL shortener</h1>
-     <% if (locals.id) { %>
-        <p>
-            URL Generated:
-            http://localhost:8001/url/<%= id %>
-        </p>
-    <% } %>
-    <div>
-        <form method="POST" action="/url">
-            <label>Enter Your Original URL</label>
-            <input
-                type="text"
-                name="url"
-                placeholder="https://example.com"
-            />
-            <button type="submit">Generate</button>
-        </form>
+    <div class="main-container">
+        <header>
+            <h1>TrimURL</h1>
+            <button class="logout-btn" onclick="document.cookie='token=; Max-Age=0; path=/'; window.location.href='/login';">Sign Out</button>
+        </header>
+
+        <% if (locals.error) { %>
+            <div class="error-message">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <% if (locals.id) { %>
+            <div class="success-banner">
+                <span class="success-title">Short URL generated successfully!</span>
+                <div class="url-copy-box">
+                    <input type="text" readonly id="generatedUrl" value="<%= baseUrl %>/url/<%= id %>">
+                    <button onclick="copyToClipboard()">Copy URL</button>
+                </div>
+            </div>
+            <script>
+                function copyToClipboard() {
+                    const copyText = document.getElementById("generatedUrl");
+                    copyText.select();
+                    copyText.setSelectionRange(0, 99999);
+                    navigator.clipboard.writeText(copyText.value);
+                    
+                    const btn = document.querySelector('.url-copy-box button');
+                    const origText = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    btn.style.background = '#10b981';
+                    setTimeout(() => {
+                        btn.textContent = origText;
+                        btn.style.background = 'var(--accent-color)';
+                    }, 2000);
+                }
+            </script>
+        <% } %>
+
+        <div class="card">
+            <form method="POST" action="/url">
+                <label class="form-group-label" for="url-input">Enter Your Original Long URL</label>
+                <div class="form-group">
+                    <input
+                        type="text"
+                        id="url-input"
+                        name="url"
+                        required
+                        placeholder="https://example.com/some/very/long/path/to/shorten"
+                    />
+                    <button type="submit">Shorten URL</button>
+                </div>
+            </form>
+        </div>
+
+        <% if (locals.urls && urls.length > 0) { %>
+            <h2 class="table-title">Your Shortened URLs</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">S. No</th>
+                            <th style="width: 220px;">Short Link</th>
+                            <th>Original Link</th>
+                            <th style="width: 100px; text-align: center;">Clicks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% urls.forEach((url, index) => { %>
+                            <tr>
+                                <td><%= index + 1 %></td>
+                                <td>
+                                    <a class="short-link" href="<%= baseUrl %>/url/<%= url.shortId %>" target="_blank">
+                                        <%= baseUrl %>/url/<%= url.shortId %>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="dest-link" href="<%= url.redirectURL %>" target="_blank" rel="noopener noreferrer">
+                                        <%= url.redirectURL %>
+                                    </a>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="clicks-badge"><%= url.visitHistory.length %></span>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
     </div>
-    <div>
-    <% if (locals.urls) { %>
-
-    <table>
-        <thead>
-            <th>S. No</th>
-            <th>ShortID</th>
-            <th>Redirect</th>
-            <th>Clicks</th>
-        </thead>
-
-        <tbody>
-            <% urls.forEach((url, index) => { %>
-
-            <tr>
-                <td><%= index + 1 %></td>
-                <td><%= url.shortId %></td>
-                <td><%= url.redirectURL %></td>
-                <td><%= url.visitHistory.length %></td>
-            </tr>
-
-            <% }) %>
-        </tbody>
-    </table>
-
-    <% } %>
-</div>
-
 </body>
 </html>
