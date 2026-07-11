@@ -33,14 +33,14 @@ router.get("/", restrictTo(["NORMAL","ADMIN"]), async (req, res) => {
 });
 
 router.get("/signup", (req, res) => {
-    if (req.cookies?.token) {
+    if (req.user) {
         return res.redirect("/");
     }
     return res.render("signup");
 });
 
 router.get("/login", (req, res) => {
-    if (req.cookies?.token) {
+    if (req.user) {
         return res.redirect("/");
     }
     return res.render("login");
