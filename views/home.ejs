@@ -271,8 +271,22 @@
 <body>
     <div class="main-container">
         <header>
-            <h1>TrimURL</h1>
-            <button class="logout-btn" onclick="document.cookie='token=; Max-Age=0; path=/'; window.location.href='/login';">Sign Out</button>
+            <div>
+                <h1>TrimURL</h1>
+                <% if (locals.user) { %>
+                    <p style="margin: 0.25rem 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">
+                        Logged in as: <strong style="color: var(--text-primary);"><%= user.email %></strong>
+                        <% if (locals.isAdmin) { %> <span style="color: #818cf8; font-weight: bold;">(Admin)</span> <% } %>
+                    </p>
+                <% } %>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <% if (locals.user && user.role === "ADMIN") { %>
+                    <a href="/admin/urls" style="color: #818cf8; font-size: 0.875rem; text-decoration: none; font-weight: 600; padding: 0.5rem 0.75rem; background: rgba(129, 140, 248, 0.1); border-radius: 6px;">Admin View</a>
+                    <a href="/" style="color: var(--text-secondary); font-size: 0.875rem; text-decoration: none; font-weight: 600;">My URLs</a>
+                <% } %>
+                <button class="logout-btn" onclick="document.cookie='token=; Max-Age=0; path=/'; window.location.href='/login';">Sign Out</button>
+            </div>
         </header>
 
         <% if (locals.error) { %>
@@ -325,7 +339,9 @@
         </div>
 
         <% if (locals.urls && urls.length > 0) { %>
-            <h2 class="table-title">Your Shortened URLs</h2>
+            <h2 class="table-title">
+                <% if (locals.isAdmin) { %>All Users' Shortened URLs<% } else { %>Your Shortened URLs<% } %>
+            </h2>
             <div class="table-container">
                 <table>
                     <thead>
@@ -333,6 +349,9 @@
                             <th style="width: 80px;">S. No</th>
                             <th style="width: 220px;">Short Link</th>
                             <th>Original Link</th>
+                            <% if (locals.isAdmin) { %>
+                                <th style="width: 200px;">Created By</th>
+                            <% } %>
                             <th style="width: 100px; text-align: center;">Clicks</th>
                         </tr>
                     </thead>
@@ -350,6 +369,9 @@
                                         <%= url.redirectURL %>
                                     </a>
                                 </td>
+                                <% if (locals.isAdmin) { %>
+                                    <td><%= url.createdBy ? url.createdBy.email : 'Unknown' %></td>
+                                <% } %>
                                 <td style="text-align: center;">
                                     <span class="clicks-badge"><%= url.visitHistory.length %></span>
                                 </td>

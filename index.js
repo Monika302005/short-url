@@ -49,6 +49,9 @@ app.get("/url/:shortId", async (req, res, next) => {
     if (shortId === "analytics") {
         return next();
     }
+    if (shortId === "favicon.ico" || shortId === "robots.txt") {
+        return res.status(404).end();
+    }
 
     try {
         const entry = await URL.findOneAndUpdate(

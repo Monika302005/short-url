@@ -3,13 +3,11 @@ const URL = require("../models/url");
 
 async function handleGenerateNewShortURL(req, res) {
     const body = req.body;
+    const referer = req.get("Referer") || "/";
+    const targetPath = referer.split("?")[0];
 
     if (!body.url) {
-        const allUrls = await URL.find({ createdBy: req.user._id });
-        return res.status(400).render("home", {
-            error: "URL is required",
-            urls: allUrls,
-        });
+        return res.redirect(`${targetPath}?error=${encodeURIComponent("URL is required")}`);
     }
 
     try {
@@ -22,19 +20,10 @@ async function handleGenerateNewShortURL(req, res) {
             createdBy: req.user._id,
         });
 
-        const allUrls = await URL.find({ createdBy: req.user._id });
-
-        return res.render("home", {
-            id: shortId,
-            urls: allUrls,
-        });
+        return res.redirect(`${targetPath}?id=${shortId}`);
     } catch (error) {
         console.error("Error creating short URL:", error);
-        const allUrls = await URL.find({ createdBy: req.user._id });
-        return res.status(500).render("home", {
-            error: "Failed to generate short URL. Please try again.",
-            urls: allUrls,
-        });
+        return res.redirect(`${targetPath}?error=${encodeURIComponent("Failed to generate short URL. Please try again.")}`);
     }
 }
 
