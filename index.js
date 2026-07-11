@@ -43,14 +43,12 @@ app.use((req, res, next) => {
 
 app.use(checkForAuthentication);
 
-// Routes
-app.use("/url", restrictTo(["NORMAL", "ADMIN"]), urlRoute);
-app.use("/user", userRoute);
-app.use("/", staticRouter);
-
-// Safe Redirection Route
-app.get("/url/:shortId", async (req, res) => {
+// Safe Redirection Route (Public)
+app.get("/url/:shortId", async (req, res, next) => {
     const shortId = req.params.shortId;
+    if (shortId === "analytics") {
+        return next();
+    }
 
     try {
         const entry = await URL.findOneAndUpdate(
@@ -82,6 +80,11 @@ app.get("/url/:shortId", async (req, res) => {
         return res.status(500).send("Internal Server Error");
     }
 });
+
+// Routes
+app.use("/url", restrictTo(["NORMAL", "ADMIN"]), urlRoute);
+app.use("/user", userRoute);
+app.use("/", staticRouter);
 
 app.listen(PORT, () =>
     console.log(`Server Started at PORT:${PORT}`)
